@@ -1,0 +1,408 @@
+body {
+  padding:0;
+  margin:0;
+  background: #bbb;
+}
+input[type="text"],input[type="password"],input[type="password"],textarea,input[type="button"],input[type="submit"],button {
+  font-family:"Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size:90%;
+  color: #000;
+  background: #fff;
+  border: 1px solid #999;
+  padding: 0.5ex;
+}
+input[type="file"] {
+  border: none;
+}
+input[type="text"]:focus,
+textarea:focus {
+  border: 1px solid #111;
+  outline: none;
+  background: #e0f1f9;
+}
+button,
+input[type="submit"],
+input[type="button"] {
+  padding: 0.5ex 1ex;
+  background: #eee;
+}
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover {
+  background: #111;
+  color: #fff;
+}
+div#toolbar {
+  background-color: #111;
+  color: #fff;
+  padding: 0.5em;
+  font-size: 90%;
+  width: 100%;
+  height: 3em;
+  position: fixed;
+  -moz-box-shadow: 0 5px 5px #888;
+  -webkit-box-shadow: 0 5px 5px #888;
+  box-shadow: 0 5px 5px #888;
+}
+div#toolbar a {
+  color: #8bcce7;
+}
+div#toolbar a:focus,
+div#toolbar a:hover {
+  color: #f6a828;
+}
+div#footbar {
+  background-color: #111;
+  color: #fff;
+  padding: 0.5em;
+  font-size: 90%;
+  width: 100%;
+  height: 1.5em;
+  position: fixed;
+  bottom: 0;
+}
+div#page_container {
+  padding-top: 5.0em;
+  padding-bottom: 3.0em;
+}
+ul.context_metadata {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ul.context_metadata li {
+  padding: 0;
+  margin: 0;
+  display: inline;
+  padding-right: 1em;
+}
+div.auth_info {
+  float: right;
+  margin-right: 2em;
+  margin-top: 1em;
+  text-align: right;
+}
+div.auth_info a {
+  text-decoration: none;
+}
+
+#actions_menu {
+  margin: 0;
+  padding: 0;
+  height: 1em;
+}
+#actions_menu li {
+  list-style: none;
+  float: left;
+}
+#actions_menu li a {
+  display: block;
+  text-decoration: none;
+  padding: 1em;
+}
+/* The div.shim is not strictly necessary; its only purpose is to add some invisible bottom padding
+   so that the menu doesn't disappear as soon as the pointer moves a pixel below the last menu item.
+*/
+#actions_menu li div.menu_shim {
+  display: none;
+  position: absolute;
+  padding: 0 0 8em 0;
+  margin: 0;
+}
+#actions_menu li.kbhover div.menu_shim,
+#actions_menu li:hover div.menu_shim {
+  display: block;
+}
+#actions_menu li.kbhover a,
+#actions_menu li:hover a {
+  background-color: #333;
+}
+#actions_menu li ul {
+  margin: 0;
+  padding: 0;
+  width: 12em;
+  background-color: #333;
+  border: 5px solid #333;
+  -moz-box-shadow: 0 5px 5px #888;
+  -webkit-box-shadow: 0 5px 5px #888;
+  box-shadow: 0 5px 5px #888;
+}
+#actions_menu li li {
+  float: none;
+}
+ul#actions_menu li li.kbhover a,
+ul#actions_menu li li a:hover {
+  background-color: #111;
+}
+span.menu-caret {
+  font-size: 74%;
+  padding: 0 1ex;
+}
+
+
+div#page {
+  width: 900px;
+  border: 1px solid #999;
+  margin: auto;
+  background: #fff;
+/* Kinda prefer a flat look, but a shadow effect can be used if desired...
+  -moz-box-shadow: 0 3px 5px #888, 3px 3px 5px #888, -3px 3px 5px #888;
+  -webkit-box-shadow: 0 3px 5px #888, 3px 3px 5px #888, -3px 3px 5px #888;
+  box-shadow: 0 3px 5px #888, 3px 3px 5px #888, -3px 3px 5px #888;
+*/
+}
+div#footer {
+  width: 880px;
+  margin: auto;
+  padding: 2em;
+  font-size: 80%;
+}
+div#masthead {
+  padding: 1em;
+  background: #258ab5;
+  overflow: auto;
+}
+div#sitetitle {
+  font-size: 200%;
+  float: left;
+  color: #fff;
+}
+div#sitesearch {
+  float: right;
+}
+div#sitesearch form {
+  margin: 0;
+}
+div#crumbtrail {
+  border-bottom: 1px solid #999;
+  background-color: #eee;
+  padding: 1ex;
+  clear: both;
+}
+div#content {
+  padding: 1em;
+}
+div.info_msg,
+div.warn_msg,
+div.error_msg {
+  padding: 1em;
+  padding-left: 4em;
+  margin-top: 1ex;
+}
+div.info_msg {
+  border: 1px solid #ccc;
+  background: #eee url(/static/dialog-info.png) no-repeat 1em;
+}
+div.warn_msg {
+  border: 1px solid #ccc;
+  background: #eee url(/static/dialog-warning.png) no-repeat 1em;
+}
+div.error_msg {
+  border: 1px solid #ccc;
+  background: #fbe3e4 url(/static/dialog-error.png) no-repeat 1em;
+}
+/* Override some deform styles */
+.deform li.error{
+  background-color: #fbe3e4;
+}
+.deform li.error label.desc, .deform p.error, deform h3.errorMsgLbl{
+  color: #000000;
+}
+.deform p.error{
+  font-size: 80%;
+  color: #DD0000;
+}
+fieldset {
+  border: 1px solid #999;
+}
+/* Hide main deform error message (we'll use our own flash error instead). */
+li.errorLi {
+  display: none;
+}
+/* Date picker widget was too huge */
+div.ui-datepicker {
+  font-size: 80%;
+}
+div.ui-datepicker td,
+div.ui-datepicker th {
+  font-size: 100%;
+}
+.wide_input { width: 100%; }
+/* Begin pagination styles */
+div.pagination {
+  margin: 1em;
+  text-align: center;
+}
+div.pagination * {
+  border: 1px solid #999;
+  padding: 0.5ex 1ex;
+}
+div.pagination a {
+  text-decoration: none;
+  color: #111;
+}
+div.pagination a:hover {
+  background: #f6a828;
+  color: #fff;
+  font-weight: bold;
+}
+div.pagination span.current_page {
+  font-weight: bold;
+  color: #fff;
+  background: #111;
+  border-color: #111;
+}
+div.pagination span.disabled {
+  color: #888;
+  border: none;
+}
+div.pagination span.ellipsis {
+  color: #888;
+  border: none;
+}
+/* End pagination styles */
+
+/* Begin sort control styles */
+a.sort_ctrl {
+  text-decoration: none;
+  color: #888;
+}
+a.sort_ctrl_current {
+  color: #fff;
+}
+a.sort_ctrl:hover {
+  color: #f6a828;
+}
+th.sort_ctrl_current {
+  color: #fff;
+  background: #258ab5;
+}
+table tr.odd td.sort_ctrl_current {
+  background-color: #efefef;
+}
+table tr.even td.sort_ctrl_current {
+  background-color: #e0e0e0;
+}
+/* End sort control styles */
+
+/* Set default table styling */
+table {
+  padding: 0;
+  margin: 0;
+  border-spacing: 1px;
+  border-collapse: collapse;
+  border: 1px solid #e0e0e0;
+}
+table tr th,
+table tr td {
+  border: 1px solid #e0e0e0;
+  padding: 0.5ex;
+}
+table tr th {
+  color: #444;
+}
+table tr.odd td {
+  background-color: #ffffff;
+}
+table tr.even td {
+  background-color: #f0f0f0;
+}
+
+table.vertical_headers tr th {
+  text-align: right;
+}
+table.horizontal_headers tr th {
+  text-align: left;
+}
+table.horizontal_headers tr:hover td {
+  background: #fad08a;
+}
+
+/* Begin table/grid styles */
+table.grid {
+  border-collapse: separate;
+  background: #fff;
+  width: 100%;
+}
+table.grid tr th,
+table.grid tr td {
+  border: 0;
+}
+table.grid tr th {
+  text-align: left;
+}
+table.grid tr.checked td,
+table.grid tr td.checked {
+  background-color: #e6efc2;
+}
+table.grid tr:hover td {
+  background: #fad08a;
+}
+table.grid tr.submits td {
+  background: #d0d0d0;
+}
+/* End table/grid styles */
+
+/* End simple_form (used for login form) */
+form.simple_form div {
+  clear: both;
+  margin: 1ex;
+}
+form.simple_form div.submit_buttons {
+  padding-left: 10em;
+}
+form.simple_form label {
+  float: left;
+  width: 9em;
+  padding-right: 1em;
+  text-align: right;
+}
+/* End simple_form */
+
+ul.content_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ul.content_list li {
+  padding: 1ex 0;
+  margin: 0;
+}
+
+a.history_diff_link {
+  float: right;
+  font-size: 80%;
+}
+ins.diff {
+  background-color: #bbffbb;
+}
+del.diff {
+  background-color: #ffcccc;
+  text-decoration: line-through !important;
+}
+div.history_diff_item {
+  border: 1px solid #999;
+  margin-bottom: 1em;
+}
+div.history_diff_item h3 {
+  background-color: #e0e0e0;
+  border-bottom: 1px solid #999;
+  margin: 0;
+  padding: 0.5ex;
+}
+div.history_diff_item div.history_diff_item_value {
+  padding: 1ex;
+}
+div.history_diff_item div.history_diff_item_value h4 {
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #999;
+  margin: 1.5ex 0;
+  padding: 0.5ex;
+}
+a.help_link {
+  float: right;
+  margin-top: 1em;
+}
+input.delta_input {
+  width: 2em;
+}

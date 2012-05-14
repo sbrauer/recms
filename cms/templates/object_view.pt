@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="content">
+<h1>${context.__name__}</h1>
+<table class="vertical_headers">
+<tr tal:repeat="name ['__name__', '_object_type', '_id', '_created', '_modified']
++ context.get_schema_names()">
+<th>${name}</th>
+<td>${repr(getattr(context, name, None))}</td>
+</tr>
+</table>
+</metal:block>
+</metal:block>

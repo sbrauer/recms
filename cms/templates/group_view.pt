@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="content">
+<h1>${context.title}</h1>
+<tal:block define="users context.get_users(); num len(users);">
+<p>This group has ${num} ${(num==1 and 'member') or 'members'}.</p>
+<table class="horizontal_headers" tal:condition="users">
+<tr>
+  <th>Fullname</th>
+  <th>Username</th>
+  <th>Last logged in</th>
+  <th>Edit</th>
+</tr>
+<tal:block repeat="item users">
+<tr class="${repeat['item'].even() and 'even' or 'odd'}">
+  <td><a href="${request.resource_url(item)}">${item.sortable_fullname}</a></td>
+  <td><a href="${request.resource_url(item)}">${item.__name__}</a></td>
+  <td>${item.format_localized_datetime_attribute('last_logged_in') or 'never'}</td>
+  <td><a href="${request.resource_url(item, 'edit')}">edit</a></td>
+</tr>
+</tal:block>
+</table>
+</tal:block>
+
+<tal:block condition="not context.is_system_group()">
+<tal:block define="local_role_content context.get_content_with_local_roles(); num len(local_role_content);">
+<p>This group has local roles for ${num} ${(num==1 and 'object') or 'objects'}.</p>
+<table class="horizontal_headers" tal:condition="local_role_content">
+<tr>
+  <th>Object</th>
+  <th>Local roles</th>
+</tr>
+<tal:block repeat="item local_role_content">
+<tr class="${repeat['item'].even() and 'even' or 'odd'}">
+  <td><a href="${request.resource_url(item, 'local_roles')}">${item.__name__}</a></td>
+  <td>
+    <ul>
+      <li tal:repeat="(principal, role) item.get_local_roles().items()">
+        ${principal} = ${role}
+      </li>
+    </ul>
+  </td>
+</tr>
+</tal:block>
+</table>
+</tal:block>
+</tal:block>
+
+</metal:block>
+</metal:block>

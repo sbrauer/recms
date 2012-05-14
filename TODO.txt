@@ -1,0 +1,180 @@
+Need unit tests!
+
+
+Implement "advanced search" to search by:
+full text, title, type (multi), state (multi), path
+If searching in mongo instead of elastic, may need to add an "_in_trash" attribute to Content
+so that we can do searches in the content collection and filter out trash with on "_in_trash":False.
+Not necessary if searching in elastic, since we unindex content when it's trashed.
+
+
+
+figure out how to export/import a subtree of content (including associated files... and history?)
+* Note that for an entire site we could just use mongodump and mongorestore for a whole database.
+
+
+
+Index PDF and Word attachments in Elastic
+http://packages.python.org/pyes/guide/reference/mapping/attachment-type.html
+Perhaps a single "attachments" field would do.
+I think it could contain an array of attachments and Elastic would handle it
+(if one can believe http://packages.python.org/pyes/guide/reference/mapping/array-type.html)
+
+So in mapping:
+"attachments": { "type" : "attachment" }
+
+Example value for indexing:
+"attachments": [
+    {
+        "_content_type" : "application/pdf",
+        "_name" : "foo.pdf",
+        "content" : "... base64 encoded attachment ..."
+    },
+    {
+        "_content_type" : "application/vnd.ms-excel",
+        "_name" : "bar.doc",
+        "content" : "... base64 encoded attachment ..."
+    }
+]
+
+
+
+
+Add account locking.... after X (say 20) failed login attempts, lock an account for some Y minutes (say 60).
+Could be accomplished with a list attribute "login_failures" that stores Datetime objects.
+When a user tries to login:
+    Before even looking at the password...
+    Note current datetime in variable "now"
+    Remove all datetimes from login_failures < (now - Y)
+    If len(login_failures) >= X:
+        error out that the account is temporarily locked due to excessive failed logins
+
+When a user successfully logs in, clear login_failures
+When a login fails, append now to login_failures
+
+Or just use Fail2ban (for example recipe, see http://www.jquantlib.org/index.php/Protecting_Apache_with_Fail2Ban_on_Debian) now that login failures use the 401 status code.
+
+While at it, consider adding a field to User that notes the datetime of last password reset.
+Only allow a reset if the last reset < (now - some_cutoff)
+In other words, don't allow multiple resets within some relatively short window of time.
+
+
+
+
+How do we want to handle working draft copies of published content?
+
+
+
+How do we want to handle demo/staging of content?
+
+
+
+Add a site-wide history list (similar to the context view, but without the checkboxes, buttons and timestamp links. 
+(keep the diff links for individual edit items tho).
+
+
+Add a Content view named "restore" that is available only to direct children of trash.
+Shows a page with the memento details and calls veto_restore_child()
+If a veto error, show it too
+Else show a submit button to do the restore.
+
+
+
+On pages with checkboxes, add ability to select several in a row while Shift is held down...
+http://stackoverflow.com/questions/659508/how-can-i-shift-select-multiple-checkboxes-like-gmail
+
+
+
+Create a Form content type for collecting user input which can be stored (in a sep collection like "formsubmissions") and/or emailed to a recipient list.
+    
+
+
+Implement Reference schema type and widget
+Note that this handles a single reference.  Sequences can be used for multiple references.
+Question: Should the appstruct value be an ObjectId or string?
+In other words... should we tie this to Mongo or try to keep it generic?
+If an ObjectId, consider afterwards creating our own File type/widget instead of futzing with filedicts in resources.Ojbect.
+
+Issue: Sequence doesn't currently have a way to reorder items... we may have to implement this ourselves then consider submitting to ChrisM.
+
+
+
+Integrate drag+drop file upload widget
+http://blueimp.github.com/jQuery-File-Upload/
+(possibly refer to http://pypi.python.org/pypi/PyGall for inspiration)
+
+
+Add drag+drop ordering of folder contents.
+To avoid accidental re-ordering, don't make the entire rows draggable.
+Instead have a small grabbable handle for each row indicated with an icon
+or even a unicode arrow character like one of these:
+↕  2195
+⇅  21C5
+⇕  21D5
+⇳  21F3
+Use http://jqueryui.com/demos/sortable/
+and limit the drag handle with http://jqueryui.com/demos/draggable/#handle
+
+
+
+consider using Fanstatic for managing static resources
+http://www.fanstatic.org
+taking it a step further, consider also using lesscss 
+http://www.gawel.org/weblog/en/2011/12/Using_lesscss_with_pyramid_and_fanstatic
+
+also see https://github.com/do3cc/fanstatic.deform (uses fanstatic for deform requirements)
+
+
+
+consider using Bootstrap
+refer to Kotti (http://kottidemo.danielnouri.org/) for some inspiration
+
+
+
+=============================
+OLD TODOs (aka TODONEs)
+=============================
+
+move content metadata from topbar to sticky bottom bar (http://ryanfait.com/sticky-footer/)
+make topbar just high enough for the menu... should look nicer
+
+
+Implement batch history operations in command.py (for instance, moving multiple objects from one folder to another should produce one history item... not one for each child)
+
+
+[DONE] folder_contents should take primary and secondary sort into account for unordered folders
+[TODO?] the template should include one or two extra columns as necessary
+
+
+
+User-configurable folder views
+------------------------------
+   primary sort field
+   primary sort dir -- vocab is ((1, 'ascending), (-1, 'descending'))
+   secondary sort field
+   secondary sort dir
+   Sort dirs all default to ascending (1)
+   sort field is a selection with options: none, title, name, created, modified, other)
+
+add several new attributes to Folder allowing a CMS user to configure
+the folder view in one of these styles (selection widget):
+1. list contents (with optional "intro" and "outro" html)
+   - applicable attributes:
+   intro - optional html text
+   outro - optional html text
+   show intro/outro on first page only (boolean)
+   list item style (options: title only,
+       title and description,
+       title, date and description,
+       title, description, and date)
+   display date (selection with options: created, modified, other...)
+2. display specific child (default name="index")   [use pyramid.view.render_view()]
+   - applicable attributes:
+   name of child to display (string)
+3. redirect to first viewable child
+4. use template   [use pyramid.renderers.render_to_response(); refer to pagination stuff for example of the similar method render()]
+   - applicable attributes:
+   template name (string)
+5. use view
+   - applicable attributes:
+   view name (string)

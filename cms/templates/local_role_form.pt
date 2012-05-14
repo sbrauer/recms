@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="head_end">
+<script type="text/javascript" src="${request.static_url('cms:static/cms.js')}"></script>
+</metal:block>
+<metal:block fill-slot="content">
+<h1>${context.title} - ${page_title}</h1>
+<tal:block condition="groups">
+<form method="post" id="role_form">
+  <input type="hidden" name="csrf_token" value="${csrf_token}" />
+  <table class="grid">
+  <thead>
+  <tr>
+    <th>Group</th>
+    <th colspan="${len(roles)+1}">Local roles</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tal:block repeat="item groups">
+  <tr class="${repeat['item'].even() and 'even' or 'odd'}" tal:define="current_role local_roles.get('group:%s' % item.__name__) or 'None'">
+    <td><a href="${request.resource_url(item)}">${item.__name__}</a></td>
+    <tal:block repeat="role roles">
+    <td tal:define="role_principal 'group:'+role"><input type="radio" name="${item.__name__}_role" value="${role}" id="${item.__name__}_${role}" checked="${((current_role==role_principal) and 'checked') or None}"/> <label for="${item.__name__}_${role}">${role}</label></td>
+    </tal:block>
+    <td><input type="radio" name="${item.__name__}_role" value="None" id="${item.__name__}_None" checked="${((current_role=='None') and 'checked') or None}"/> <label for="${item.__name__}_None">none</label></td>
+  </tr>
+  </tal:block>
+  </tbody>
+  <tr class="submits">
+    <td colspan="${len(roles)+2}">
+      <input type="submit" name="save" value="Save"/>
+      <input type="submit" name="view" value="Save &amp; View"/>
+    </td>
+  </tr>
+  </table>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+    setup_form_radios();
+});
+</script>
+</tal:block>
+<tal:block condition="not groups">
+<p>
+No custom groups currently exist to assign local roles to.
+</p>
+<p tal:define="groups request.root['groups']; has_permission import: pyramid.security.has_permission;" tal:condition="has_permission('view', groups, request)">
+  <a href="${request.resource_url(groups)}">Manage groups</a>
+</p>
+</tal:block>
+</metal:block>
+</metal:block>

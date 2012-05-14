@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="head_end">
+<script type="text/javascript" src="${request.static_url('cms:static/cms.js')}"></script>
+</metal:block>
+<metal:block fill-slot="content">
+<h1>Manage groups</h1>
+<p tal:define="parent context.__parent__" tal:condition="parent"><a href="${request.resource_url(parent, 'contents')}">Up to parent</a></p>
+<form method="post" id="contents_form">
+<input type="hidden" name="csrf_token" value="${csrf_token}" />
+<table class="grid" tal:define="system_groups context.get_system_group_names()">
+  <thead>
+  <tr>
+    <th></th>
+    <th width="50%">Name</th>
+    <th width="50%">Type</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tal:block repeat="name context.get_group_names()">
+  <tr class="${repeat['name'].even() and 'even' or 'odd'}" tal:define="is_sys name in system_groups">
+    <td><input type="checkbox" name="names" value="${name}" tal:condition="not is_sys"/></td>
+    <td><a href="${request.resource_url(context, name, '')}">${name}</a></td>
+    <td>${(is_sys and 'system') or 'custom'}</td>
+  </tr>
+  </tal:block>
+  </tbody>
+  <tr class="submits">
+    <td id="invert_selection_container"></td>
+    <td colspan="2">
+      <input type="submit" name="delete" value="Delete" />
+    </td>
+  </tr>
+</table>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+    setup_contents_checkboxes();
+});
+</script>
+</metal:block>
+</metal:block>

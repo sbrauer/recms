@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="content">
+<tal:block define="format_localized_datetime import: cms.formatters.format_localized_datetime;">
+<h1>${context.title} - ${page_title}</h1>
+<h2>${subtitle}</h2>
+</tal:block>
+<p tal:condition="not diffs">
+No differences found.
+</p>
+<div tal:repeat="(name, item) diffs.items()" class="history_diff_item">
+  <h3>${name}</h3>
+  <div class="history_diff_item_value">
+    <div tal:condition="item.has_key('diff')">
+      ${structure: item.diff}
+    </div>
+    <div tal:condition="not item.has_key('diff')">
+      <h4>before</h4>
+      ${item.before}
+      <h4>after</h4>
+      ${item.after}
+    </div>
+  </div>
+</div>
+</metal:block>
+</metal:block>

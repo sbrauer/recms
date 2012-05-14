@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:tal="http://xml.zope.org/namespaces/tal"
+xmlns:metal="http://xml.zope.org/namespaces/metal"
+metal:define-macro="master">
+<head>
+  <metal:block define-slot="head_start"></metal:block>
+  <title><tal:block condition="page_title">${page_title} - </tal:block>${context.title}<tal:block tal:define="root request.root" condition="context.title != root.title"> - ${root.title}</tal:block></title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+  <base href="${request.resource_url(context)}"/><!--[if lte IE 6]></base><![endif]-->
+  <link rel="shortcut icon" href="${request.static_url('cms:static/favicon.ico')}" />
+<tal:comment condition="False">
+content.css is also used to style TinyMCE textarea.
+See http://www.tinymce.com/wiki.php/Configuration:content_css
+Best practice would be to extend content.css with more default styles.
+</tal:comment>
+  <link rel="stylesheet" href="${request.static_url('cms:static/content.css')}" type="text/css" media="screen" />
+  <link rel="stylesheet" href="${request.static_url('cms:static/cms.css')}" type="text/css" media="screen" />
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> 
+  <metal:block define-slot="head_end"></metal:block>
+</head>
+<body>
+<div id="toolbar">
+  <div class="auth_info">
+    <tal:block condition="authenticated_userid">
+      Logged in as ${authenticated_userid}
+      | <a href="${request.resource_url(request.root, 'logout')}">Log out</a>
+    </tal:block>
+    <tal:block condition="not authenticated_userid">
+      <a href="${request.resource_url(request.root, 'login')}">Log in</a>
+    </tal:block>
+  </div>
+  <ul id="actions_menu" tal:condition="authenticated_userid">
+    <tal:block repeat="action_cat ('context', 'global', 'add')">
+      <tal:block define="items actions[action_cat]">
+        <li tal:condition="action_cat=='add' and len(items)==1"><a href="${items[0].url}">Add ${items[0].title.lower()}</a></li>
+        <li tal:condition="items and not (action_cat=='add' and len(items)==1)">
+          <a href="#" class="menu-leader">${action_cat.capitalize()} <span class="menu-caret">&#x25bc;</span></a>
+          <div class="menu_shim">
+          <ul>
+            <li tal:repeat="item items">
+              <a href="${item.url}">${item.title}</a>
+            </li>
+          </ul>
+          </div>
+        </li>
+      </tal:block>
+    </tal:block>
+  </ul>
+</div>
+<div id="page_container">
+<div id="page">
+<div id="masthead">
+  <div id="sitetitle">${request.root.title}</div>
+  <div id="sitesearch">
+    <form action="/search">
+      <input name="query" type="text" size="20" value="${request.GET.get('query','').strip()}" /><input type="submit" value="Search" class="submit" />
+    </form>
+  </div>
+</div>
+<div id="crumbtrail">
+  <tal:block repeat="item crumbtrail">
+    <tal:block condition="not repeat['item'].start"> &gt; </tal:block>
+    <a href="${item.url}" tal:omit-tag="repeat['item'].end and not page_title">${item.title}</a>
+  </tal:block>
+  <tal:block condition="page_title"> &gt; ${page_title}</tal:block>
+</div>
+<div id="content">
+<tal:block repeat="queue ['error', 'warn', 'info']">
+  <div class="${queue}_msg" tal:repeat="msg request.session.pop_flash(queue)">${msg}</div>
+</tal:block>
+<metal:block define-slot="content"></metal:block>
+</div>
+</div>
+<div id="footer">Copyright &copy; 2012 Sambotronix</div>
+</div>
+<div id="footbar" tal:condition="authenticated_userid">
+  <ul class="context_metadata">
+    <li>Type: ${context._object_type}</li>
+    <li>Name: ${context.__name__ or 'n/a'}</li>
+    <li>State: ${hasattr(context, 'get_pub_state') and context.get_pub_state() or 'n/a'}</li>
+    <li>Created: ${(hasattr(context, '_created') and context.format_localized_datetime_attribute('_created')) or 'n/a'}</li>
+    <li>Modified: ${(hasattr(context, '_modified') and context.format_localized_datetime_attribute('_modified')) or 'n/a'}</li>
+  </ul>
+</div>
+<style type="text/css">
+  #pdebugtoolbarhandle, #pDebugToolbarHandle { top: 170px !important; }
+</style>
+<script type="text/javascript">
+$(document).ready(function() {
+  $("a.menu-leader").click(function(event) {
+      event.preventDefault();
+  });
+  // Support keyboard tabbing; menu css that uses :hover should have similar rules for .kbhover.
+  $("#actions_menu li").focusin(function() {
+    $(this).addClass("kbhover");
+  });
+  $("#actions_menu li").focusout(function() {
+    $(this).removeClass("kbhover");
+  });
+
+});
+</script>
+</body>
+</html>

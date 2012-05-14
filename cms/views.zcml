@@ -1,0 +1,305 @@
+<configure xmlns="http://pylonshq.com/pyramid">
+
+  <view
+     context="pyramid.exceptions.NotFound"
+     view=".views.notfound"
+     renderer="templates/notfound.pt"
+     />
+
+  <view
+     context="pyramid.exceptions.Forbidden"
+     view=".views.login"
+     renderer="templates/login.pt"
+     />
+
+  <view
+     context=".resources.Object"
+     view=".views.common_view"
+     renderer="templates/object_view.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Object"
+     name="object_view"
+     view=".views.common_view"
+     renderer="templates/object_view.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Object"
+     name="edit"
+     view=".views.edit_form"
+     renderer="templates/edit_form.pt"
+     permission="edit"
+     />
+
+  <view
+     context=".resources.Object"
+     name="rename"
+     view=".views.rename_object"
+     renderer="templates/generic_form.pt"
+     permission="edit"
+     />
+
+  <view
+     context=".resources.Content"
+     name="delete"
+     view=".views.trash_object"
+     renderer="templates/delete_form.pt"
+     permission="edit"
+     />
+
+  <view
+     context=".resources.Content"
+     name="workflow_transition"
+     view=".views.workflow_transition"
+     renderer="templates/generic_form.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Content"
+     name="comment"
+     view=".views.comment"
+     renderer="templates/generic_form.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Content"
+     name="history"
+     view=".views.history_view"
+     renderer="templates/history.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Content"
+     name="edit_history_diffs"
+     view=".views.edit_history_diffs"
+     renderer="templates/history_diffs.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Content"
+     name="history_diffs"
+     view=".views.history_diffs"
+     renderer="templates/history_diffs.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Content"
+     name="history_snapshot"
+     view=".views.history_snapshot"
+     permission="view"
+     />
+
+<!-- Original version (before user-configurable folder view options).
+  <view
+     context=".resources.Folder"
+     view=".views.folder_view"
+     renderer="templates/folder_view.pt"
+     permission="view"
+     />
+-->
+
+  <view
+     context=".resources.Folder"
+     view=".views.folder_view"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Folder"
+     name="add"
+     view=".views.add_object"
+     renderer="templates/edit_form.pt"
+     permission="add"
+     />
+
+  <!--
+  In the view callable POST handling, be sure to raise HTTPForbidden if the user tries to do anything they aren't permitted to do.
+  -->
+  <view
+     context=".resources.Folder"
+     name="contents"
+     view=".views.folder_contents"
+     renderer="templates/folder_contents.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Folder"
+     name="local_roles"
+     view=".views.folder_local_roles"
+     renderer="templates/local_role_form.pt"
+     permission="set_roles"
+     />
+
+  <view
+     context=".resources.Root"
+     name="search"
+     view=".views.search"
+     renderer="templates/search.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Root"
+     name="advanced_search_form"
+     view=".views.advanced_search_form"
+     renderer="templates/generic_form.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Root"
+     name="advanced_search_results"
+     view=".views.advanced_search_results"
+     renderer="templates/advanced_search_results.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Root"
+     name="content_by_id"
+     view=".views.content_by_id"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Root"
+     name="serve_file"
+     view=".views.serve_file"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Root"
+     name="login"
+     view=".views.login"
+     renderer="templates/login.pt"
+     />
+
+  <view
+     context=".resources.Root"
+     name="logout"
+     view=".views.logout"
+     />
+
+  <view
+     context=".resources.Root"
+     name="my_password"
+     view=".views.my_password"
+     renderer="templates/generic_form.pt"
+     />
+
+  <view
+     context=".resources.Root"
+     name="reset_password"
+     view=".views.reset_password"
+     renderer="templates/generic_form.pt"
+     />
+
+  <view
+     context="gridfs.grid_file.GridOut"
+     view=".views.gridfs_file_view"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Article"
+     view=".views.common_view"
+     renderer="templates/article_view.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.User"
+     view=".views.common_view"
+     renderer="templates/user_view.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.User"
+     name="delete"
+     view=".views.delete_object"
+     renderer="templates/delete_form.pt"
+     permission="edit"
+     />
+
+  <view
+     context=".resources.User"
+     name="password"
+     view=".views.user_password"
+     renderer="templates/generic_form.pt"
+     permission="edit"
+     />
+
+  <!--
+  In the view callable POST handling, be sure to raise HTTPForbidden if the user tries to do anything they aren't permitted to do.
+  -->
+  <view
+     context=".resources.UserCollection"
+     view=".views.user_collection_view"
+     renderer="templates/user_collection.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.UserCollection"
+     name="add"
+     view=".views.add_user"
+     renderer="templates/edit_form.pt"
+     permission="add"
+     />
+
+  <view
+     context=".resources.Group"
+     view=".views.common_view"
+     renderer="templates/group_view.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.Group"
+     name="delete"
+     view=".views.delete_object"
+     renderer="templates/delete_form.pt"
+     permission="edit"
+     />
+
+  <!--
+  In the view callable POST handling, be sure to raise HTTPForbidden if the user tries to do anything they aren't permitted to do.
+  -->
+  <view
+     context=".resources.GroupCollection"
+     view=".views.group_collection_view"
+     renderer="templates/group_collection.pt"
+     permission="view"
+     />
+
+  <view
+     context=".resources.GroupCollection"
+     name="add"
+     view=".views.add_group"
+     renderer="templates/edit_form.pt"
+     permission="add"
+     />
+
+  <!--
+  In the view callable POST handling, be sure to raise HTTPForbidden if the user tries to do anything they aren't permitted to do.
+  -->
+  <view
+     context=".resources.trash.Trash"
+     view=".views.trash_contents"
+     renderer="templates/trash_contents.pt"
+     permission="view"
+     />
+
+</configure>

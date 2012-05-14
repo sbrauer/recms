@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="content">
+<h1>Search Results${(query and ' for %s' % query) or ''}</h1>
+<p tal:condition="not query">You didn't enter any search terms.</p>
+<tal:block condition="query">
+<tal:block condition="total_items==1">
+There is 1 match.
+</tal:block>
+<tal:block condition="total_items!=1">
+There are ${total_items} matches.
+</tal:block>
+
+<ol tal:condition="total_items" start="${start_num}">
+<tal:block repeat="item items">
+<li tal:define="obj item['object']; highlights item['highlight'] or {};">
+  <a href="${request.resource_url(obj)}">${obj.title}</a>
+  <p>${obj.description}</p>
+  <p><small>Last modified ${obj.format_localized_datetime_attribute('_modified', datetime_format)}</small></p>
+  <blockquote>
+  <tal:block repeat="key highlights.keys()">
+  <tal:block repeat="highlight highlights[key]"><br tal:condition="not repeat['highlight'].start" />... ${structure: highlight} ...</tal:block>
+  </tal:block>
+  </blockquote>
+</li>
+</tal:block>
+</ol>
+${structure: pagination}
+</tal:block>
+</metal:block>
+</metal:block>

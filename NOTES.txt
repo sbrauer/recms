@@ -1,0 +1,79 @@
+Pyramid and Mongo and ElasticSearch
+
+Mongo        Elastic  (terminology mapping)
+-----        -------
+database   = index
+collection = doctype
+_id        = ID
+
+Running mongo
+
+cd ~/tmp
+# Download from http://www.mongodb.org/downloads, for instance:
+wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.0.2.tgz
+tar xfz mongodb-linux-x86_64-2.0.2.tgz
+ln -s mongodb-linux-x86_64-2.0.2 mongodb
+# Start the server...
+cd mongodb
+mkdir -p data
+bin/mongod --dbpath=data --rest
+
+
+Running elasticsearch
+
+cd ~/tmp
+# Download from http://www.elasticsearch.org/download/, for instance:
+wget https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.18.6.tar.gz
+tar xfz elasticsearch-0.18.6.tar.gz
+ln -s elasticsearch-0.18.6 elasticsearch
+cd elasticsearch
+# Install the thrift transport plugin
+bin/plugin -install transport-thrift
+# Starting the server...
+bin/elasticsearch -f
+# See http://www.elasticsearch.org/guide/reference/setup/installation.html
+# for more info on running the server in production.
+
+
+
+Setting up pyramid
+
+On debian, be sure to install "python-profiler" so profiling will work.
+
+virtualenv-2.6 --no-site-packages cms_env
+cd cms_env/
+
+# If pip isn't available at bin/pip....
+bin/easy_install -U setuptools
+bin/easy_install pip
+
+bin/pip install pyramid==1.2.5
+bin/pip install nose coverage bpython
+
+# Add to setup.py requires list:
+    'pymongo',
+    'pyes',
+    'thrift',
+    'deform',
+    'WebTest',
+
+bin/paster create -t pyramid_starter        # Then hookup mongo stuff manually, similar to http://docs.pylonsproject.org/projects/pyramid_cookbook/dev/mongo.html; note that i tried the existing pyramid_mongo scaffold, but didn't like it (doesn't add much value, and already out of date.... missing debugtoolbar)  Besides, I didn't like how it connected to the database for every request (even for static files).  Also I needed to add ElasticSearch connection info.
+NOTE for Pyramid 1.3: bin/pcreate -s pyramid_starter
+
+cd cms/
+../bin/python setup.py develop  # Note that this can be run again later to install dependencies added to the requires list in setup.py
+
+# Run tests
+../bin/python setup.py test -q
+
+# Check test coverage
+../bin/nosetests --cover-package=cms --cover-erase --with-coverage
+
+# Start webapp (using dev settings, with code reloading enabled):
+../bin/paster serve development.ini --reload
+NOTE for Pyramid 1.3: bin/pserve development.ini --reload
+
+# Interactive shell
+../bin/paster pshell development.ini#main
+NOTE for Pyramid 1.3: bin/pshell development.ini#main
+

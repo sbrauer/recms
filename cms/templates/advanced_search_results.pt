@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="head_start">
+<link rel="stylesheet" href="${request.static_url('cms:static/colorbox/colorbox.css')}" type="text/css" media="screen" charset="utf-8" />
+</metal:block>
+<metal:block fill-slot="head_end">
+<script type="text/javascript" src="${request.static_url('cms:static/colorbox/jquery.colorbox-min.js')}"></script>
+<script type="text/javascript" src="${request.static_url('cms:static/cms.js')}"></script>
+</metal:block>
+<metal:block fill-slot="content">
+<!-- FIXME: write a help page
+<a tal:condition="items" href="${request.static_url('cms:static/help/advanced_search_results.html')}" class="help_link">Help</a>
+-->
+<h1>${page_title}</h1>
+<p>${summary}  (<a href="${request.resource_url(context, 'advanced_search_form')}">revise query</a>) FIXME: pass parms</p>
+<p>
+<tal:block condition="total_items==1">
+There is 1 match.
+</tal:block>
+<tal:block condition="total_items!=1">
+There are ${total_items} matches.
+</tal:block>
+</p>
+
+<tal:block condition="items">
+<form method="post" id="contents_form">
+<input type="hidden" name="csrf_token" value="${csrf_token}" />
+<table class="grid" tal:define="resources import: cms.resources; perm resources.permissions; global can_edit_something False; sort_cols 'FIXME'">
+<thead>
+<tr>
+  <th></th>
+  <th>Name</th>
+  <th>Title</th>
+  <th>Type</th>
+  <th>State</th>
+  <th>Created</th>
+  <th>Modified</th>
+  <th>Edit</th>
+  <th>Contents</th>
+</tr>
+</thead>
+<tbody>
+  <tal:block repeat="item items">
+  <tr class="${repeat['item'].even() and 'even' or 'odd'}" tal:define="object item['object']">
+    <td><input type="checkbox" name="ids" value="${object._id}" /></td>
+    <td class="${('__name__' in sort_cols and 'sort_ctrl_current') or None}">${object.__name__}</td>
+    <td class="${('sortable_title' in sort_cols and 'sort_ctrl_current') or None}"><a href="${request.resource_url(object)}">${object.sortable_title}</a></td>
+    <td class="${('_object_type' in sort_cols and 'sort_ctrl_current') or None}">${object._object_type}</td>
+    <td class="${('_pub_state' in sort_cols and 'sort_ctrl_current') or None}">${object.get_pub_state() or 'n/a'}</td>
+    <td class="${('_created' in sort_cols and 'sort_ctrl_current') or None}">${object.format_localized_datetime_attribute('_created')}</td>
+    <td class="${('_modified' in sort_cols and 'sort_ctrl_current') or None}">${object.format_localized_datetime_attribute('_modified')}</td>
+    <td tal:define="can_edit perm.has_permission(perm.EDIT, object, request);"><a tal:condition="can_edit" href="${request.resource_url(object, 'edit')}">edit<tal:block define="global can_edit_something True"/></a><span tal:condition="not can_edit">n/a</span></td>
+    <td tal:define="folderish isinstance(object, resources.Folder)">
+      <a tal:condition="folderish" href="${request.resource_url(object, 'contents')}">contents</a>
+      <span tal:condition="not folderish">n/a</span>
+    </td>
+  </tr>
+  </tal:block>
+</tbody>
+  <tr class="submits">
+    <td id="invert_selection_container"></td>
+    <td colspan="8">
+      <!--
+      <input type="submit" name="copy" value="Copy" />
+      <input type="submit" name="cut" value="Cut" tal:condition="can_edit_something" />
+      -->
+      <input type="submit" name="delete" value="Delete" tal:condition="can_edit_something" />
+      FIXME: publish, etc
+    </td>
+  </tr>
+</table>
+</form>
+</tal:block>
+
+${structure: pagination}
+
+<tal:block condition="items">
+<script type="text/javascript">
+$(document).ready(function(){
+    setup_contents_checkboxes();
+    //FIXME: write a help page: setup_help();
+});
+</script>
+</tal:block>
+</metal:block>
+</metal:block>

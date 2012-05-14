@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="head_start">
+<tal:block repeat="css deform_resources['css']"><link rel="stylesheet" href="${request.static_url('deform:static/'+css)}" type="text/css" /></tal:block>
+</metal:block>
+<metal:block fill-slot="head_end">
+<tal:block repeat="js deform_resources['js']"><script type="text/javascript" src="${request.static_url('deform:static/'+js)}"></script></tal:block>
+</metal:block>
+<metal:block fill-slot="content">
+<h1>${page_title}</h1>
+${structure: form}
+</metal:block>
+</metal:block>

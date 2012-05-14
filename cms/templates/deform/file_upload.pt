@@ -1,0 +1,20 @@
+<div class="deformFileupload">
+
+  <input type="hidden" name="__start__" value="${field.name}:mapping"/>
+
+  <div class="deformReplaces" tal:condition="cstruct.get('uid')">
+
+    <input type="hidden" name="uid" value="${cstruct['uid']}"
+           id="${field.oid}-uid"/>
+    <a href="${cstruct.preview_url}" id="${field.oid}-filename" class="${cstruct.mimetype.startswith('image/') and 'image_attachments' or None}" title="${cstruct.filename}">${cstruct.filename}</a>
+
+  </div>
+
+  <input type="file" name="upload" 
+         tal:attributes="size field.widget.size;
+                         class field.widget.css_class"
+         id="${field.oid}"/>
+
+  <input type="hidden" name="__end__" value="${field.name}:mapping"/>
+
+</div>

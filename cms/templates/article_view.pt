@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<tal:block define="list_attachments context.list_attachments and context.attachments; format_bytes import: cms.formatters.format_bytes;">
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="head_start" tal:condition="list_attachments">
+<link rel="stylesheet" href="${request.static_url('cms:static/colorbox/colorbox.css')}" type="text/css" media="screen" charset="utf-8" />
+</metal:block>
+<metal:block fill-slot="head_end" tal:condition="list_attachments">
+<script type="text/javascript" src="${request.static_url('cms:static/colorbox/jquery.colorbox-min.js')}"></script>
+<script type="text/javascript" src="${request.static_url('cms:static/cms.js')}"></script>
+</metal:block>
+<metal:block fill-slot="content">
+<h1>${context.title}</h1>
+<small>${context.format_localized_datetime_attribute('dateline', datetime_format)}</small><br/>
+${structure: context.body}
+<div tal:condition="list_attachments">
+  <h3>Attachments</h3>
+  <ul>
+    <li tal:repeat="file context.get_files_for_attribute('attachments')">
+      <a href="${file.name}" class="${file.content_type.startswith('image/') and 'image_attachments' or None}" title="${file.name}">${file.name}</a> (${file.content_type} ${format_bytes(file.length)})
+    </li>
+  </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".image_attachments").colorbox({rel:'image_attachments', photo:true, scalePhotos: true, maxWidth: "99%", maxHeight: "99%"});
+});
+</script>
+</div>
+</metal:block>
+</metal:block>
+</tal:block>

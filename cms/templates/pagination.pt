@@ -1,0 +1,13 @@
+<div class="pagination">
+  <span tal:condition="page == 1" class="page_prev disabled">&laquo;</span>
+  <a tal:condition="page != 1" href="${get_page_url(page-1)}" class="page_prev" title="previous page">&laquo;</a>
+
+  <tal:block repeat="num significant_page_nums">
+    <span tal:condition="num==page" class="current_page page_num">${num}</span>
+    <a tal:condition="num not in (page, None)" href="${get_page_url(num)}" class="page_num">${num}</a>
+    <span tal:condition="num is None" class="ellipsis page_num">...</span>
+  </tal:block>
+
+  <span tal:condition="page >= total_pages" class="page_next disabled">&raquo;</span>
+  <a tal:condition="page < total_pages" href="${get_page_url(page+1)}" class="page_next" title="next page">&raquo;</a>
+</div>

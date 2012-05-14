@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="content">
+<h1>${page_title}</h1>
+<form method="post" action="${login_url}" class="simple_form">
+  <input type="hidden" name="came_from" value="${came_from}"/>
+  <div class="form_field">
+    <label for="username">Username: </label><input type="text" name="username" value="${username}" id="username"/>
+  </div>
+  <div class="form_field">
+    <label for="password">Password: </label><input type="password" name="password" value="" id="password"/>
+  </div>
+  <div class="submit_buttons">
+    <input type="submit" value="Log in" name="login-submitted" />
+  </div>
+</form>
+<p><small><a href="${request.resource_url(context, 'reset_password')}">Reset forgotten password</a></small></p>
+</metal:block>
+</metal:block>

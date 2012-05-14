@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="head_start">
+<link rel="stylesheet" href="${request.static_url('cms:static/colorbox/colorbox.css')}" type="text/css" media="screen" charset="utf-8" />
+</metal:block>
+<metal:block fill-slot="head_end">
+<script type="text/javascript" src="${request.static_url('cms:static/colorbox/jquery.colorbox-min.js')}"></script>
+<script type="text/javascript" src="${request.static_url('cms:static/cms.js')}"></script>
+</metal:block>
+<metal:block fill-slot="content">
+<a tal:condition="items" href="${request.static_url('cms:static/help/folder_contents.html')}" class="help_link">Help</a>
+<h1>${context.title} - ${page_title}</h1>
+<p tal:define="parent context.__parent__" tal:condition="parent"><a href="${(parent._id=='trash' and request.resource_url(parent)) or request.resource_url(parent, 'contents')}">Up to parent</a></p>
+<p>This ${context._object_type} contains ${total_items} ${(total_items==1 and 'item') or 'items'}.</p>
+<form method="post" id="contents_form">
+<input type="hidden" name="csrf_token" value="${csrf_token}" />
+<tal:block condition="items">
+<table class="grid" tal:define="resources import: cms.resources; perm resources.permissions; global can_edit_something False; sort_cols [x[0] for x in sort];">
+  <thead>
+  <tr>
+    <th></th>
+    <th class="${('__name__' in sort_cols and 'sort_ctrl_current') or None}">Name&nbsp;<a href="${request.resource_url(context, 'contents', query=dict(sort='__name__'))}" title="ascending" class="sort_ctrl${('__name__',1) in sort and ' sort_ctrl_current'}">&#x25bc;</a><a href="${request.resource_url(context, 'contents', query=dict(sort='-__name__'))}" title="descending" class="sort_ctrl${('__name__',-1) in sort and ' sort_ctrl_current'}">&#x25b2;</a></th>
+    <th class="${('sortable_title' in sort_cols and 'sort_ctrl_current') or None}">Title&nbsp;<a href="${request.resource_url(context, 'contents', query=dict(sort='sortable_title'))}" title="ascending" class="sort_ctrl${('sortable_title',1) in sort and ' sort_ctrl_current'}">&#x25bc;</a><a href="${request.resource_url(context, 'contents', query=dict(sort='-sortable_title'))}" title="descending" class="sort_ctrl${('sortable_title',-1) in sort and ' sort_ctrl_current'}">&#x25b2;</a></th>
+    <th class="${('_object_type' in sort_cols and 'sort_ctrl_current') or None}">Type&nbsp;<a href="${request.resource_url(context, 'contents', query=dict(sort='_object_type'))}" title="ascending" class="sort_ctrl${('_object_type',1) in sort and ' sort_ctrl_current'}">&#x25bc;</a><a href="${request.resource_url(context, 'contents', query=dict(sort='-_object_type'))}" title="descending" class="sort_ctrl${('_object_type',-1) in sort and ' sort_ctrl_current'}">&#x25b2;</a></th>
+    <th class="${('_pub_state' in sort_cols and 'sort_ctrl_current') or None}">State&nbsp;<a href="${request.resource_url(context, 'contents', query=dict(sort='_pub_state'))}" title="ascending" class="sort_ctrl${('_pub_state',1) in sort and ' sort_ctrl_current'}">&#x25bc;</a><a href="${request.resource_url(context, 'contents', query=dict(sort='-_pub_state'))}" title="descending" class="sort_ctrl${('_pub_state',-1) in sort and ' sort_ctrl_current'}">&#x25b2;</a></th>
+    <th class="${('_created' in sort_cols and 'sort_ctrl_current') or None}">Created&nbsp;<a href="${request.resource_url(context, 'contents', query=dict(sort='_created'))}" title="ascending" class="sort_ctrl${('_created',1) in sort and ' sort_ctrl_current'}">&#x25bc;</a><a href="${request.resource_url(context, 'contents', query=dict(sort='-_created'))}" title="descending" class="sort_ctrl${('_created',-1) in sort and ' sort_ctrl_current'}">&#x25b2;</a></th>
+    <th class="${('_modified' in sort_cols and 'sort_ctrl_current') or None}">Modified&nbsp;<a href="${request.resource_url(context, 'contents', query=dict(sort='_modified'))}" title="ascending" class="sort_ctrl${('_modified',1) in sort and ' sort_ctrl_current'}">&#x25bc;</a><a href="${request.resource_url(context, 'contents', query=dict(sort='-_modified'))}" title="descending" class="sort_ctrl${('_modified',-1) in sort and ' sort_ctrl_current'}">&#x25b2;</a></th>
+    <th>Edit</th>
+    <th>Contents</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tal:block repeat="item items">
+  <tr class="${repeat['item'].even() and 'even' or 'odd'}">
+    <td><input type="checkbox" name="names" value="${item.__name__}" /></td>
+    <td class="${('__name__' in sort_cols and 'sort_ctrl_current') or None}"><input type="text" name="newnames" value="${item.__name__}" /><input type="hidden" name="orignames" value="${item.__name__}" /></td>
+    <td class="${('sortable_title' in sort_cols and 'sort_ctrl_current') or None}"><a href="${request.resource_url(item)}">${item.sortable_title}</a></td>
+    <td class="${('_object_type' in sort_cols and 'sort_ctrl_current') or None}">${item._object_type}</td>
+    <td class="${('_pub_state' in sort_cols and 'sort_ctrl_current') or None}">${item.get_pub_state() or 'n/a'}</td>
+    <td class="${('_created' in sort_cols and 'sort_ctrl_current') or None}">${item.format_localized_datetime_attribute('_created')}</td>
+    <td class="${('_modified' in sort_cols and 'sort_ctrl_current') or None}">${item.format_localized_datetime_attribute('_modified')}</td>
+    <td tal:define="can_edit perm.has_permission(perm.EDIT, item, request);"><a tal:condition="can_edit" href="${request.resource_url(item, 'edit')}">edit<tal:block define="global can_edit_something True"/></a><span tal:condition="not can_edit">n/a</span></td>
+    <td tal:define="folderish isinstance(item, resources.Folder)">
+      <a tal:condition="folderish" href="${request.resource_url(item, 'contents')}">contents</a>
+      <span tal:condition="not folderish">n/a</span>
+    </td>
+  </tr>
+  </tal:block>
+  </tbody>
+  <tr class="submits">
+    <td id="invert_selection_container"></td>
+    <td>
+      <input type="submit" name="rename" value="Rename" tal:condition="can_edit_something" />
+    </td>
+    <td colspan="7">
+      <input type="submit" name="copy" value="Copy" />
+      <input type="submit" name="cut" value="Cut" tal:condition="can_edit_something" />
+      <input tal:condition="can_paste" type="submit" name="paste" value="Paste" />
+      <input type="submit" name="delete" value="Delete" tal:condition="can_edit_something" />
+
+      <tal:block condition="context.is_ordered() and perm.has_permission(perm.EDIT, context, request)">
+        <tal:block condition="sort">
+          <small><a href="${request.resource_url(context, 'contents')}">Disable sorting and display ordering controls</a></small>
+        </tal:block>
+        <tal:block condition="not sort">
+          <input type="submit" name="reorder_top" value="Move to top" />
+          <input type="submit" name="reorder_bottom" value="Move to bottom" />
+          <input type="submit" name="reorder_up" value="Move up" />
+          <input type="submit" name="reorder_down" value="Move down" />
+          by <input type="text" name="delta" value="1" size="2" maxlength="2" class="delta_input" />
+        </tal:block>
+      </tal:block>
+    </td>
+  </tr>
+</table>
+</tal:block>
+<tal:block condition="not items">
+  <input tal:condition="can_paste" type="submit" name="paste" value="Paste" />
+</tal:block>
+</form>
+${structure: pagination}
+<tal:block condition="items">
+<script type="text/javascript">
+$(document).ready(function(){
+    setup_contents_checkboxes();
+    setup_help();
+});
+</script>
+</tal:block>
+</metal:block>
+</metal:block>

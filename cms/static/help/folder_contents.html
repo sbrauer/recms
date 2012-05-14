@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Help - Manage Contents Form</title>
+</head>
+<body>
+<h1>Help - Manage Contents Form</h1>
+<p>
+This page allows you to view the contents of this folder (or folder-like object).
+Depending on the user groups you have been assigned to, it may also be possible to manipulate the content objects in various ways.<sup>1</sup>
+</p>
+<h4>Selecting child objects to act on</h4>
+<p>
+Most of the operations you can perform (other than rename and paste) require you to select the objects that the operation will apply to by checking one or more of the checkboxes in the first column.  After checking the appropriate boxes, press one of the buttons at the bottom of the table (such as Copy, Cut, or Delete) to complete the action.
+</p>
+<p>
+The checkbox at the bottom of the checkbox column inverts the checkboxes.  In other words, it causes all unchecked boxes to become checked, and all checked boxes to become unchecked.  This can be very handy when you want to select all or almost all of the child objects.
+</p>
+<h4>Cut, Copy and Paste</h4>
+<p>
+These three functions work together to allow you to move objects from one folder to another, or to create new objects based on existing objects ("cloning").  To move objects, use Cut and Paste.  To clone objects, use Copy and Paste.
+</p>
+<p>
+The first step is to check the boxes for the objects you want to act on.  Then press Cut if you wish to move them, or press Copy if you wish to clone them.  The actions note the selected objects in the "paste buffer".<sup>2</sup>  Once you have something in your paste buffer, a Paste button will appear (if you have permission to add content in the current folder).  Navigate to the folder where you want to move or clone the objects, then press Paste.  If you did a Cut earlier, the objects will be moved from their original folder into the new folder, and the Paste buffer will be cleared.  If you did a Copy earlier, the objects will be cloned into the current folder (which could even be the same folder, in which case the new objects will have new names like "original-name-1" or "original-name-2"), and the Paste buffer will not be cleared (so you could clone/copy the same objects several times).
+</p>
+<h4>Delete</h4>
+<p>
+To remove one or more child objects, check their boxes then press the Delete button.  The objects will not be permanently deleted, but will instead be moved into the <a href="/trash/">Trash folder</a>.
+</p>
+<h4>Rename</h4>
+<p>
+To rename objects, change their names in the text fields and press the Rename button at the bottom of the Name column.
+(There is no need to check any boxes when renaming.  The system will notice which names you changed and only rename those objects.)
+</p>
+<h4>Reordering objects</h4>
+<p>
+Some folders allow their child objects to be ordered.
+Such folders will have four extra buttons labelled "Move to top", "Move to bottom", "Move up" and "Move down".
+Check the boxes for each object you want to reorder then press one of the Move buttons.
+If you're moving objects up or down, you can optionally specify how many positions to move them (defaults to 1) before you press the Move button.
+</p>
+<h4>Notes</h4>
+<ol>
+<li id="note1">The buttons that are displayed depend on the access level for your user group(s), so you may not see all the buttons in every folder on the site.</li>
+<li id="note2">Cut and Copy don't change anything in the database.  Only the Paste action causes changes in the database.  If you Cut or Copy objects but never Paste them, nothing will change.</li>
+</ol>
+</body>
+</html>

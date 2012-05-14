@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="content">
+<h1>${context.title}</h1>
+<table class="vertical_headers">
+<tr>
+<th>Username</th>
+<td>${context.__name__}</td>
+</tr>
+<tr>
+<th>Firstname</th>
+<td>${context.firstname}</td>
+</tr>
+<tr>
+<th>Lastname</th>
+<td>${context.lastname}</td>
+</tr>
+<tr>
+<th>E-mail</th>
+<td><a href="mailto:${context.email}">${context.email}</a></td>
+</tr>
+<tr>
+<th>Groups</th>
+<td tal:define="groups context.get_groups()">
+  <ul tal:condition="groups">
+    <li tal:repeat="group groups">
+      <a href="${request.resource_url(group)}">${group.__name__}</a>
+    </li>
+  </ul>
+  <span tal:condition="not groups">none</span>
+</td>
+</tr>
+<tr>
+<th>Active</th>
+<td>${repr(context.active)}</td>
+</tr>
+<tr>
+<th>Created</th>
+<td>${context.format_localized_datetime_attribute('_created', datetime_format)}</td>
+</tr>
+<tr>
+<th>Modified</th>
+<td>${context.format_localized_datetime_attribute('_modified', datetime_format)}</td>
+</tr>
+<tr>
+<th>Last login</th>
+<td>${context.format_localized_datetime_attribute('last_logged_in', datetime_format) or 'never'}</td>
+</tr>
+</table>
+</metal:block>
+</metal:block>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="head_start">
+<link rel="stylesheet" href="${request.static_url('cms:static/colorbox/colorbox.css')}" type="text/css" media="screen" charset="utf-8" />
+</metal:block>
+<metal:block fill-slot="head_end">
+<script type="text/javascript" src="${request.static_url('cms:static/colorbox/jquery.colorbox-min.js')}"></script>
+<script type="text/javascript" src="${request.static_url('cms:static/cms.js')}"></script>
+</metal:block>
+<metal:block fill-slot="content">
+<a tal:condition="items" href="${request.static_url('cms:static/help/history.html')}" class="help_link">Help</a>
+<h1>${context.title} - ${page_title}</h1>
+<form method="post" id="history_form">
+<input type="hidden" name="csrf_token" value="${csrf_token}" />
+<table class="grid" tal:condition="items">
+  <thead>
+  <tr>
+    <th></th>
+    <th>Time</th>
+    <th>User</th>
+    <th>Action</th>
+    <th>Details</th>
+  </tr>
+  </thead>
+  <tbody tal:define="format_localized_datetime import: cms.formatters.format_localized_datetime; ids request.params.getall('ids'); get_patch_keys import: cms.diffutil.get_patch_keys;">
+  <tal:block repeat="item items">
+  <tr class="${repeat['item'].even() and 'even' or 'odd'}">
+    <td><input type="checkbox" name="ids" value="${item._id}" checked="${((str(item._id) in ids) and 'checked') or None}" /></td>
+    <td><a href="${request.resource_url(context, 'history_snapshot', str(item._id))}">${format_localized_datetime(request, item.time)}</a></td>
+    <td>${item.user or 'SYSTEM'}</td>
+    <td>${item.action}</td>
+    <td>
+        <tal:block condition="item.action in ('edit', 'revert')">
+          <tal:block condition="item.action == 'revert'">
+            reverted to values as of ${format_localized_datetime(request, item.history_time)}<br />
+          </tal:block>
+          changed: ${', '.join(get_patch_keys(item.changes, top_level_only=True))}
+          <a href="${request.resource_url(context, 'edit_history_diffs', str(item._id))}" class="history_diff_link">diffs</a>
+        </tal:block>
+        <tal:block condition="item.action=='create'">
+          <span tal:condition="item.child_id == context._id">self</span>
+          <a tal:condition="item.parent_id == context._id" href="/content_by_id/${item.child_id}">child</a>
+          created with name "${item.child_name}"
+        </tal:block>
+        <tal:block condition="item.action=='rename'">
+          <tal:block condition="item.parent_id == context._id">
+            renamed
+            <tal:block repeat="child item.children">
+              ${child.old_name} to
+              <a href="/content_by_id/${child.id}">${child.new_name}</a><tal:block condition="not repeat['child'].end">, </tal:block>
+            </tal:block>
+          </tal:block>
+          <tal:block condition="item.parent_id != context._id">
+            <tal:block define="child_data hc.get_history_subitem_for_child_id(item, context._id)" condition="child_data">
+              name changed from "${child_data.old_name}" to "${child_data.new_name}"
+            </tal:block>
+          </tal:block>
+        </tal:block>
+        <tal:block condition="item.action=='move'">
+          <tal:block condition="context._id in (item.old_parent_id, item.new_parent_id)">
+            <tal:block repeat="child item.children">
+              <a href="/content_by_id/${child.id}">${child.name}</a><tal:block condition="not repeat['child'].end">, </tal:block>
+            </tal:block>
+          </tal:block>
+          <tal:block condition="context._id not in (item.old_parent_id, item.new_parent_id)">
+            self
+          </tal:block>
+          moved from 
+          <span tal:condition="item.old_parent_id == context._id">self</span>
+          <a tal:condition="item.old_parent_id != context._id" href="/content_by_id/${item.old_parent_id}">${item.old_parent_path}</a>
+          to
+          <span tal:condition="item.new_parent_id == context._id">self</span>
+          <a tal:condition="item.new_parent_id != context._id" href="/content_by_id/${item.new_parent_id}">${item.new_parent_path}</a>
+        </tal:block>
+        <tal:block condition="item.action=='copy'">
+          <tal:block define="child_data hc.get_history_subitem_for_child_id(item, context._id)">
+            <tal:block condition="context._id in (item.orig_parent_id, item.copy_parent_id)">
+              <tal:block repeat="child item.children">
+                <a href="/content_by_id/${child.orig_id}">${child.orig_name}</a><tal:block condition="not repeat['child'].end">, </tal:block>
+              </tal:block>
+            </tal:block>
+            <tal:block condition="context._id not in (item.orig_parent_id, item.copy_parent_id)">
+              <a href="/content_by_id/${child_data.orig_id}">${child_data.orig_name}</a>
+            </tal:block>
+            copied from
+            <span tal:condition="item.orig_parent_id == context._id">self</span>
+            <a tal:condition="item.orig_parent_id != context._id" href="/content_by_id/${item.orig_parent_id}">${item.orig_parent_path}</a>
+            to
+            <span tal:condition="item.copy_parent_id == context._id">self</span>
+            <a tal:condition="item.copy_parent_id != context._id" href="/content_by_id/${item.copy_parent_id}">${item.copy_parent_path}</a>
+            as
+            <tal:block condition="context._id in (item.orig_parent_id, item.copy_parent_id)">
+              <tal:block repeat="child item.children">
+                <a href="/content_by_id/${child.id}">${child.name}</a><tal:block condition="not repeat['child'].end">, </tal:block>
+              </tal:block>
+            </tal:block>
+            <tal:block condition="context._id not in (item.orig_parent_id, item.copy_parent_id)">
+              ${child_data.name}
+            </tal:block>
+          </tal:block>
+        </tal:block>
+        <tal:block condition="item.action=='trash'">
+          <tal:block condition="item.parent_id == context._id">
+            <tal:block repeat="child item.children">
+              <a href="/content_by_id/${child.id}">${child.name}</a><tal:block condition="not repeat['child'].end">, </tal:block>
+            </tal:block>
+          </tal:block>
+          deleted from
+          <span tal:condition="item.parent_id == context._id">self</span>
+          <a tal:condition="item.parent_id != context._id" href="/content_by_id/${item.parent_id}">${item.parent_path}</a>
+          to <a href="/trash">trash</a>
+        </tal:block>
+        <tal:block condition="item.action=='restore'">
+          <tal:block tal:condition="item.parent_id == context._id">
+            <tal:block repeat="child item.children">
+              <a href="/content_by_id/${child.id}">${child.name}</a><tal:block condition="not repeat['child'].end">, </tal:block>
+            </tal:block>
+          </tal:block>
+          restored from trash to
+          <span tal:condition="item.parent_id == context._id">self</span>
+          <a tal:condition="item.parent_id != context._id" href="/content_by_id/${item.parent_id}">${item.parent_path}</a>
+        </tal:block>
+        <tal:block condition="item.action in ('comment', 'publish', 'approve', 'unpublish', 'submit', 'retract', 'reject')">
+          ${item.comment}
+          <div tal:condition="item.has_key('recurse') and item['recurse']">
+            [<span tal:condition="item.object_id == context._id">self</span><a
+            href="/content_by_id/${item.object_id}" tal:condition="item.object_id != context._id">${item.object_path}</a>
+            transitioned with recursion]
+          </div>
+        </tal:block>
+        <tal:block condition="item.action=='reorder'">
+          moved ${', '.join(item.child_names)}
+          <tal:block condition="item.target in ('top', 'bottom')">to</tal:block>
+          ${item.target}
+          <tal:block condition="item.target in ('up', 'down')">by ${item.delta}</tal:block>
+        </tal:block>
+    </td>
+  </tr>
+  </tal:block>
+  </tbody>
+  <tr class="submits">
+    <td colspan="5">
+      <input type="submit" name="diff" value="Diff" />
+      <input type="submit" name="revert" value="Revert" tal:condition="can_revert" />
+    </td>
+  </tr>
+</table>
+</form>
+${structure: pagination}
+<p tal:condition="not items">No history.</p>
+<tal:block condition="items">
+<script type="text/javascript">
+$(document).ready(function(){
+    setup_checkbox_change_callback("#history_form");
+    setup_help();
+});
+</script>
+</tal:block>
+</metal:block>
+</metal:block>

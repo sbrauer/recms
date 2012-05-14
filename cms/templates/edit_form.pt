@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="head_start">
+<tal:block repeat="css deform_resources['css']"><link rel="stylesheet" href="${request.static_url('deform:static/'+css)}" type="text/css" /></tal:block>
+<link rel="stylesheet" href="${request.static_url('cms:static/colorbox/colorbox.css')}" type="text/css" media="screen" charset="utf-8" />
+</metal:block>
+<metal:block fill-slot="head_end">
+<tal:block repeat="js deform_resources['js']"><script tal:condition="js != 'scripts/jquery-1.4.2.min.js'" type="text/javascript" src="${request.static_url('deform:static/'+js)}"></script></tal:block>
+<script type="text/javascript" src="${request.static_url('cms:static/colorbox/jquery.colorbox-min.js')}"></script>
+<script type="text/javascript" src="${request.static_url('cms:static/cms.js')}"></script>
+</metal:block>
+<metal:block fill-slot="content">
+<h1>${page_title}</h1>
+${structure: form}
+<script type="text/javascript">
+deform.load();
+
+$(document).ready(function(){
+  setup_name_generator();
+  $(".image_attachments").colorbox({rel:'image_attachments', photo:true, scalePhotos: true, maxWidth: "99%", maxHeight: "99%"});
+});
+</script>
+</metal:block>
+</metal:block>

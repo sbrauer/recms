@@ -1,0 +1,55 @@
+<!DOCTYPE html> 
+<html> 
+  <head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Documentation for CMS dependencies</title>
+  </head> 
+  <body> 
+    <h1>Documentation for CMS dependencies</h1>
+    <ul>
+      <li><a href="http://docs.pylonsproject.org/projects/pyramid/en/latest/index.html">Pyramid</a> - Pyramid doc home</li>
+      <li><a href="http://docs.pylonsproject.org/projects/deform/en/latest/index.html">Deform</a> - form generation/validation library</li>
+      <li><a href="http://docs.pylonsproject.org/projects/colander/en/latest/">Colander</a> - schema library used with Deform</li>
+      <li><a href="http://www.mongodb.org">MongoDB</a> - a NoSQL database for collections of JSON documents</li>
+      <li><a href="http://api.mongodb.org/python/current/index.html">PyMongo</a> - Python interface to MongoDB</li>
+      <li><a href="http://www.elasticsearch.org/">ElasticSearch</a> - fulltext indexer/search engine based on Lucene</li>
+      <li><a href="http://pypi.python.org/pypi/pyes/">pyes</a> - Python interface to ElasticSearch</li>
+    </ul>
+    <h2>Also of interest</h2>
+    <ul>
+      <li><a href="http://www.pylonsproject.org/">Pylons project home</a> - umbrella project for Pyramid and related stuff</li>
+      <li><a href="https://github.com/rhec/pyelasticsearch">pyelasticsearch</a> - an alternative to pyes that may be worth another look</li>
+    </ul>
+    <h2>MongoDB shell examples</h2>
+    <pre>
+      # Connect to a database:
+      mongodb/bin/mongo cms_dev
+
+      # "Select" specific fields for all documents in the "content" collection:
+      db.content.find({}, {'title':1, '_object_type':1})
+
+      # "Select" the title for all documents in the "content" collection where _object_type == 'article':
+      db.content.find({'_object_type':'article'}, {'title':1})
+    </pre>
+    <h2>ElasticSearch examples</h2>
+    <pre>
+      # Search the entire "cms_dev" index for the string "example": (uses the special "_all" field)
+      curl -XGET http://localhost:9200/cms_dev/_search?q=example
+
+      # Search the "content" type in the  "cms_dev" index for the string "example": (uses the special "_all" field)
+      curl -XGET http://localhost:9200/cms_dev/content/_search?q=example
+
+      # Search the "content" type in the  "cms_dev" index for the string "example" in the "title" field only:
+      curl -XGET http://localhost:9200/cms_dev/content/_search?q=title:example
+
+      # Search the "content" type in the  "cms_dev" index for documents where _object_type == 'article':
+      curl -XGET http://localhost:9200/cms_dev/content/_search?q=_object_type:article
+
+      # Gets the document for a specific ID:
+      curl -XGET http://localhost:9200/cms_dev/content/4f26f17ff7e7d94c6b000006
+
+      # Gets the mapping data for the "content" type in the  "cms_dev" index:
+      curl -XGET http://localhost:9200/cms_dev/content/_mapping
+    </pre>
+  </body> 
+</html> 

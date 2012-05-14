@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="content">
+<h1>${context.title}</h1>
+${structure: intro}
+<ul class="content_list">
+<li tal:repeat="item items">
+  <tal:block repeat="field list_item_fields">
+    <a tal:condition="field=='title'" href="${request.resource_url(item)}"><strong>${item.title}</strong></a>
+    <p tal:condition="field=='description'">${item.description}</p>
+    <p tal:condition="field=='date'"><small>${item.format_localized_datetime_attribute(display_date, datetime_format)}</small></p>
+  </tal:block>
+</li>
+</ul>
+${structure: pagination}
+<p tal:condition="not items">This folder is empty.</p>
+${structure: outro}
+</metal:block>
+</metal:block>

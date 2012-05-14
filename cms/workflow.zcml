@@ -1,0 +1,77 @@
+<configure xmlns="http://namespaces.repoze.org/bfg">
+
+  <include package="repoze.workflow" file="meta.zcml"/>
+
+  <workflow
+   type="publication"
+   name="publication workflow"
+   state_attr="_pub_state"
+   initial_state="private"
+   content_types=".resources.content.IContent"
+   permission_checker="pyramid.security.has_permission"
+   elector=".resources.content.publication_workflow_elector"
+   >
+
+   <state name="private">
+     <key name="description" value="Only viewable by authenticated users. Editable by submitter or publisher group."/>
+   </state>
+
+   <state name="public">
+     <key name="description" value="Viewable by anyone.  Only editable by publisher group."/>
+   </state>
+
+   <state name="pending">
+     <key name="description" value="Submitted by submitter group for approval by a publisher.  Only editable by publishers."/>
+   </state>
+
+   <transition
+      name="publish"
+      callback=".resources.content.publication_workflow_callback"
+      from_state="private"
+      to_state="public"
+      permission="publish"
+   />
+
+   <transition
+      name="approve"
+      callback=".resources.content.publication_workflow_callback"
+      from_state="pending"
+      to_state="public"
+      permission="publish"
+   />
+
+   <transition
+      name="unpublish"
+      callback=".resources.content.publication_workflow_callback"
+      from_state="public"
+      to_state="private"
+      permission="publish"
+   />
+
+   <transition
+      name="submit"
+      callback=".resources.content.publication_workflow_callback"
+      from_state="private"
+      to_state="pending"
+      permission="submit"
+   />
+
+   <transition
+      name="retract"
+      callback=".resources.content.publication_workflow_callback"
+      from_state="pending"
+      to_state="private"
+      permission="submit"
+   />
+
+   <transition
+      name="reject"
+      callback=".resources.content.publication_workflow_callback"
+      from_state="pending"
+      to_state="private"
+      permission="publish"
+   />
+
+   </workflow>
+
+</configure>

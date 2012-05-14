@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="content">
+<h1>${page_title}</h1>
+<form method="post">
+<fieldset>
+  <p>Are you sure you want to delete the ${context._object_type} <strong>${context.__name__}</strong>?</p>
+  <input type="submit" name="submit" value="Confirm delete"/>
+  <input type="submit" name="cancel" value="Cancel"/>
+  <input type="hidden" name="csrf_token" value="${csrf_token}" />
+</fieldset>
+</form>
+</metal:block>
+</metal:block>

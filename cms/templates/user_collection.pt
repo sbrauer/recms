@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="head_end">
+<script type="text/javascript" src="${request.static_url('cms:static/cms.js')}"></script>
+</metal:block>
+<metal:block fill-slot="content">
+<h1>Manage users</h1>
+<p tal:define="parent context.__parent__" tal:condition="parent"><a href="${request.resource_url(parent, 'contents')}">Up to parent</a></p>
+<p>There ${(total_items==1 and 'is 1 user') or 'are %s users' % total_items}.</p>
+<form method="post" id="contents_form">
+<input type="hidden" name="csrf_token" value="${csrf_token}" />
+<table tal:condition="items" class="grid" tal:define="sort_cols [x[0] for x in sort]">
+  <thead>
+  <tr>
+    <th></th>
+    <th class="${('__name__' in sort_cols and 'sort_ctrl_current') or None}">Username&nbsp;<a href="${request.resource_url(context, query=dict(sort='__name__'))}" title="ascending" class="sort_ctrl${('__name__',1) in sort and ' sort_ctrl_current'}">&#x25bc;</a><a href="${request.resource_url(context, query=dict(sort='-__name__'))}" title="descending" class="sort_ctrl${('__name__',-1) in sort and ' sort_ctrl_current'}">&#x25b2;</a></th>
+    <th class="${('sortable_fullname' in sort_cols and 'sort_ctrl_current') or None}">Fullname&nbsp;<a href="${request.resource_url(context, query=dict(sort='sortable_fullname'))}" title="ascending" class="sort_ctrl${('sortable_fullname',1) in sort and ' sort_ctrl_current'}">&#x25bc;</a><a href="${request.resource_url(context, query=dict(sort='-sortable_fullname'))}" title="descending" class="sort_ctrl${('sortable_fullname',-1) in sort and ' sort_ctrl_current'}">&#x25b2;</a></th>
+    <th class="${('_created' in sort_cols and 'sort_ctrl_current') or None}">Created&nbsp;<a href="${request.resource_url(context, query=dict(sort='_created'))}" title="ascending" class="sort_ctrl${('_created',1) in sort and ' sort_ctrl_current'}">&#x25bc;</a><a href="${request.resource_url(context, query=dict(sort='-_created'))}" title="descending" class="sort_ctrl${('_created',-1) in sort and ' sort_ctrl_current'}">&#x25b2;</a></th>
+    <th class="${('_modified' in sort_cols and 'sort_ctrl_current') or None}">Modified&nbsp;<a href="${request.resource_url(context, query=dict(sort='_modified'))}" title="ascending" class="sort_ctrl${('_modified',1) in sort and ' sort_ctrl_current'}">&#x25bc;</a><a href="${request.resource_url(context, query=dict(sort='-_modified'))}" title="descending" class="sort_ctrl${('_modified',-1) in sort and ' sort_ctrl_current'}">&#x25b2;</a></th>
+    <th class="${('last_logged_in' in sort_cols and 'sort_ctrl_current') or None}">Last logged in&nbsp;<a href="${request.resource_url(context, query=dict(sort='last_logged_in'))}" title="ascending" class="sort_ctrl${('last_logged_in',1) in sort and ' sort_ctrl_current'}">&#x25bc;</a><a href="${request.resource_url(context, query=dict(sort='-last_logged_in'))}" title="descending" class="sort_ctrl${('last_logged_in',-1) in sort and ' sort_ctrl_current'}">&#x25b2;</a></th>
+    <th>Edit</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tal:block repeat="item items">
+  <tr class="${repeat['item'].even() and 'even' or 'odd'}">
+    <td><input type="checkbox" name="names" value="${item.__name__}" /></td>
+    <td class="${('__name__' in sort_cols and 'sort_ctrl_current') or None}"><a href="${request.resource_url(item)}">${item.__name__}</a></td>
+    <td class="${('sortable_fullname' in sort_cols and 'sort_ctrl_current') or None}"><a href="${request.resource_url(item)}">${item.sortable_fullname}</a></td>
+    <td class="${('_created' in sort_cols and 'sort_ctrl_current') or None}">${item.format_localized_datetime_attribute('_created')}</td>
+    <td class="${('_modified' in sort_cols and 'sort_ctrl_current') or None}">${item.format_localized_datetime_attribute('_modified')}</td>
+    <td class="${('last_logged_in' in sort_cols and 'sort_ctrl_current') or None}">${item.format_localized_datetime_attribute('last_logged_in') or 'never'}</td>
+    <td><a href="${request.resource_url(item, 'edit')}">edit</a></td>
+  </tr>
+  </tal:block>
+  </tbody>
+  <tr class="submits">
+    <td id="invert_selection_container"></td>
+    <td colspan="6">
+      <input type="submit" name="delete" value="Delete" />
+    </td>
+  </tr>
+</table>
+</form>
+${structure: pagination}
+<script type="text/javascript">
+$(document).ready(function(){
+    setup_contents_checkboxes();
+});
+</script>
+</metal:block>
+</metal:block>

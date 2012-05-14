@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<metal:block use-macro="master_template.macros['master']">
+<metal:block fill-slot="content">
+<h1>${page_title}</h1>
+<h2>Sheesh!  Now what?</h2>
+<p>
+If you typed or pasted in the url, you may want to double check that it's correct in your address bar.
+</p>
+<p>
+Otherwise you probably followed a bad or old link.  If the link was on this site, please <a href="FIXME:contact form">let us know about it</a> so we can fix it.
+<br />
+If it was on another site, you may want to go back and let the folks at that site know so <em>they</em> can fix it.
+</p>
+<p>
+Now that you're here, you could use our site search (up in the right-hand corner) to find what you were looking for.
+<br />
+Or just go to our <a href="/">homepage</a> and start looking around.
+</p>
+<p>
+Have a nice day!
+</p>
+</metal:block>
+</metal:block>

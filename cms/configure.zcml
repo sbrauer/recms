@@ -1,0 +1,29 @@
+<configure xmlns="http://pylonshq.com/pyramid">
+
+  <!-- this must be included for the view declarations to work -->
+  <include package="pyramid_zcml" />
+
+  <static
+     name="static"
+     path="static"
+     />
+
+  <static
+     name="deform_static"
+     path="deform:static"
+     />
+
+  <authtktauthenticationpolicy
+     secret="please don't tell"
+     callback=".resources.users.groupfinder"
+     />
+
+  <!-- Using our own local-role-aware policy, configured imperatively.
+  <aclauthorizationpolicy />
+  -->
+
+  <include file="workflow.zcml"/>
+
+  <include file="views.zcml"/>
+
+</configure>
