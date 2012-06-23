@@ -1,11 +1,12 @@
 ReCMS is a Content Management System based on the excellent Pyramid framework that uses MongoDB for persistence and ElasticSearch, you know, for search.
 
-It's a work in progress, but already supports:
+It's a work in progress (definitely not for production use yet), but already supports:
 
 * hierarchical folders of content (an example Article type is included; new types are easy to define and register)
-* CRUD and folder operations (cut, copy, paste, rename), all with history logging
+* CRUD and folder operations (cut, copy, paste, rename, re-order), all with history logging
+* add/edit forms use Deform; content types use Colander to define schemas
 * basic publishing workflow
-* a trash folder for deleted content
+* a trash folder for deleted content, with support for restore and copy
 * edit history compare and revert
 * user management, groups and local roles
 * and of course, full text search
@@ -88,7 +89,8 @@ Setup Instructions
 
         pshell development.ini#main
         root.add_super_user('USERNAME', 'PASSWORD')
-        Ctrl-D  # to exit pshell
+   
+   Ctrl-D to exit pshell
 
 6. Run the application:
 
@@ -102,5 +104,3 @@ Setup Instructions
 If you encounter any errors you can't figure out, let me know about them.
 TODO: How best to contact, ask for help, etc...
 
-
-TODO: Document production use: "python setup.py install" and "production.ini" instead or "development.ini".
