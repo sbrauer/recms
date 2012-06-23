@@ -128,7 +128,8 @@ class Root(Folder):
         if highlight_fields:
             for field in highlight_fields:
                 search.add_highlight(field)
-        return dbutil.get_es_conn(self.request).search(search, dbutil.get_es_index_name(self.request), sort=sort or '_score')
+        # FIXME: use new search() method???
+        return dbutil.get_es_conn(self.request).search_raw(search, dbutil.get_es_index_name(self.request), sort=sort or '_score')
 
     def search(self, fulltext=None, title=None, description=None, __name__=None, _object_type=None, _pub_state=None, path_id=None, start=0, size=10, highlight_fields=None, viewable_only=False, default_operator='AND', sort=None):
         # Return a dictionary with the keys:
