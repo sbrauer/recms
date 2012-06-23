@@ -20,9 +20,11 @@ Prerequisites
 
 1. Python 2.6 or later is required for Pyramid.
    Also install virtualenv.
+
    Refer to the Pyramid docs for instructions: http://docs.pylonsproject.org/projects/pyramid/en/1.3-branch/narr/install.html
 
 2. MongoDB
+
    If you don't already have a MongoDB server, install the latest production release from http://www.mongodb.org/downloads (I'm currently (2012-06-23) using 2.0.6.)
    
    If you just want to quickly try out ReCMS, here's a recipe for running a MongoDB server in the foreground under your non-root user account:
@@ -35,6 +37,7 @@ Prerequisites
         bin/mongod --dbpath=data --rest
 
 3. ElasticSearch
+
    If you don't already have an ElasticSearch server, install the latest production release from http://www.elasticsearch.org/download/ (I'm currently using 0.19.4.)
    
    If you just want to quickly try out ReCMS, here's a recipe for running an ElasticSearch server in the foreground under your non-root user account:
@@ -71,7 +74,7 @@ Setup Instructions
 
 4. Review the config file (development.ini) and change any settings you like.
    Most of the config is standard Pyramid stuff.
-   Here are some of the Re-CMS custom settings you may want to change (but you can probably leave them at the defaults if you just want to do a quick test drive and are running MongoDB and ElasticSearch with the default ports on localhost, as would be the case if you followed the recipes under the Prerequisites section earlier):
+   Here are some of the ReCMS custom settings you may want to change (but you can probably leave them at the defaults if you just want to do a quick test drive and are running MongoDB and ElasticSearch with the default ports on localhost, as would be the case if you followed the recipes under the Prerequisites section earlier):
    * db_uri
    * db_name
    * es_uri
