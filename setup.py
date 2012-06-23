@@ -3,7 +3,7 @@ import os
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'README.txt')).read()
+README = open(os.path.join(here, 'README.md')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
@@ -18,7 +18,7 @@ requires = [
     'thrift',
     'deform',
     'WebTest',
-    'PIL',
+#    'PIL',
 ]
 
 setup(name='cms',
@@ -33,7 +33,7 @@ setup(name='cms',
         ],
       author='Sam Brauer',
       author_email='sam.brauer@gmail.com',
-      url='',
+      url='https://github.com/sbrauer/recms',
       keywords='web pyramid pylons',
       packages=find_packages(),
       include_package_data=True,
@@ -45,6 +45,5 @@ setup(name='cms',
       [paste.app_factory]
       main = cms:main
       """,
-      paster_plugins=['pyramid'],
       )
 
