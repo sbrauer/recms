@@ -101,6 +101,3 @@ Setup Instructions
    Click the Login link in the top bar and log in with the username and password you setup in the pshell, then start exploring the menus.
 
 
-If you encounter any errors you can't figure out, let me know about them.
-TODO: How best to contact, ask for help, etc...
-
