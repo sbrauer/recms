@@ -1,6 +1,6 @@
 ReCMS is a Content Management System based on the excellent Pyramid framework that uses MongoDB for persistence and ElasticSearch, you know, for search.
 
-It's a work in progress (definitely not for production use yet), but already supports:
+It's a work in progress but already supports:
 
 * hierarchical folders of content (an example Article type is included; new types are easy to define and register)
 * CRUD and folder operations (cut, copy, paste, rename, re-order), all with history logging
@@ -98,6 +98,6 @@ Setup Instructions
 
 7. The moment of truth... in your browser hit http://127.0.0.1:6543/
    You should see an empty site (exciting, I know).
-   Click the Login link in the top bar and log in with the username and password you setup in the pshell, then start exploring the menus.
+   Click the Login link in the top bar and log in with the username and password you setup in the pshell, then start exploring the menus to create/manage content.
 
 
