@@ -1,6 +1,6 @@
 ReCMS is a Content Management System based on the excellent Pyramid framework that uses MongoDB for persistence and ElasticSearch, you know, for search.
 
-It's a work in progress but already supports:
+Features include:
 
 * hierarchical folders of content (an example Article type is included; new types are easy to define and register)
 * CRUD and folder operations (cut, copy, paste, rename, re-order), all with history logging
@@ -10,6 +10,10 @@ It's a work in progress but already supports:
 * edit history compare and revert
 * user management, groups and local roles
 * and of course, full text search
+
+Status
+------
+Not actively developed or used in production, but perhaps interesting as an example Pyramid application.
 
 Installation
 ============
